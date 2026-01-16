@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
-using Microsoft.Data.SqlClient;
 using KelvinTawiah.CodingTracker;
-using KelvinTawiah.CodingTracker.service;
+using KelvinTawiah.CodingTracker.Service;
+using Microsoft.Data.SqlClient;
 
 public class Program
 {

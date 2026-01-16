@@ -1,6 +1,6 @@
+using KelvinTawiah.CodingTracker.Model;
+using KelvinTawiah.CodingTracker.Service;
 using Spectre.Console;
-using KelvinTawiah.CodingTracker.model;
-using KelvinTawiah.CodingTracker.service;
 
 namespace KelvinTawiah.CodingTracker;
 

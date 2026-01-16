@@ -1,4 +1,4 @@
-namespace KelvinTawiah.CodingTracker.model;
+namespace KelvinTawiah.CodingTracker.Model;
 
 public class Session
 {

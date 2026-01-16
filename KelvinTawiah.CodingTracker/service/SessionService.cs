@@ -1,7 +1,7 @@
-using KelvinTawiah.CodingTracker.model;
-using KelvinTawiah.CodingTracker.repository;
+using KelvinTawiah.CodingTracker.Model;
+using KelvinTawiah.CodingTracker.Repository;
 
-namespace KelvinTawiah.CodingTracker.service;
+namespace KelvinTawiah.CodingTracker.Service;
 
 public class SessionService
 {

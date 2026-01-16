@@ -1,5 +1,5 @@
+using KelvinTawiah.CodingTracker.Model;
 using Spectre.Console;
-using KelvinTawiah.CodingTracker.model;
 
 namespace KelvinTawiah.CodingTracker;
 

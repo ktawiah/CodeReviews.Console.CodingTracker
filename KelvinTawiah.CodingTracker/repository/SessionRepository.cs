@@ -1,8 +1,8 @@
-using Microsoft.Data.SqlClient;
 using Dapper;
-using KelvinTawiah.CodingTracker.model;
+using KelvinTawiah.CodingTracker.Model;
+using Microsoft.Data.SqlClient;
 
-namespace KelvinTawiah.CodingTracker.repository;
+namespace KelvinTawiah.CodingTracker.Repository;
 
 public class SessionRepository
 {
