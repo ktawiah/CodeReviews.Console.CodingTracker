@@ -1,53 +1,61 @@
-using Dapper;
+using KelvinTawiah.CodingTracker.Data;
 using KelvinTawiah.CodingTracker.Model;
-using Microsoft.Data.SqlClient;
 
 namespace KelvinTawiah.CodingTracker.Repository;
 
+/// <summary>
+/// EF Core repository for SessionLog using LINQ queries.
+/// Notice how clean the code is compared to raw SQL strings!
+/// </summary>
 public class SessionLogRepository
 {
-  private readonly string _connectionString;
+  private readonly CodingTrackerContext _context;
 
-  public SessionLogRepository(string connectionString)
+  public SessionLogRepository(CodingTrackerContext context)
   {
-    _connectionString = connectionString;
+    _context = context;
   }
 
+  /// <summary>
+  /// Add a new log entry.
+  /// EF Core generates: INSERT INTO SessionLogs (...)
+  /// </summary>
   public void Add(SessionLog log)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = @"
-      INSERT INTO SessionLogs (SessionId, Action, Message, LoggedAt)
-      VALUES (@SessionId, @Action, @Message, @LoggedAt)";
-
-    connection.Execute(query, log);
+    _context.SessionLogs.Add(log);
+    _context.SaveChanges();
   }
 
+  /// <summary>
+  /// Clear all logs.
+  /// EF Core generates: DELETE FROM SessionLogs
+  /// </summary>
   public void Clear()
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "DELETE FROM SessionLogs";
-
-    connection.Execute(query);
+    _context.SessionLogs.RemoveRange(_context.SessionLogs);
+    _context.SaveChanges();
   }
 
+  /// <summary>
+  /// Get all logs ordered by date using LINQ.
+  /// OrderByDescending translates to: ORDER BY LoggedAt DESC
+  /// </summary>
   public List<SessionLog> View()
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "SELECT * FROM SessionLogs ORDER BY LoggedAt DESC";
-
-    return connection.Query<SessionLog>(query).ToList();
+    return _context.SessionLogs
+      .OrderByDescending(log => log.LoggedAt)
+      .ToList();
   }
 
+  /// <summary>
+  /// Find logs by session ID using LINQ Where clause.
+  /// Where translates to: WHERE SessionId = @id
+  /// </summary>
   public List<SessionLog> FindBy(int id)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "SELECT * FROM SessionLogs WHERE SessionId = @Id ORDER BY LoggedAt DESC";
-
-    return connection.Query<SessionLog>(query, new { Id = id }).ToList();
+    return _context.SessionLogs
+      .Where(log => log.SessionId == id)
+      .OrderByDescending(log => log.LoggedAt)
+      .ToList();
   }
 }

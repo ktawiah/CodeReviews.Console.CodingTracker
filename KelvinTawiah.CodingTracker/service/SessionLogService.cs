@@ -1,3 +1,4 @@
+using KelvinTawiah.CodingTracker.Data;
 using KelvinTawiah.CodingTracker.Model;
 using KelvinTawiah.CodingTracker.Repository;
 
@@ -7,9 +8,9 @@ public class SessionLogService
 {
   private readonly SessionLogRepository _repository;
 
-  public SessionLogService(string connectionString)
+  public SessionLogService(CodingTrackerContext context)
   {
-    _repository = new SessionLogRepository(connectionString);
+    _repository = new SessionLogRepository(context);
   }
 
   public void AddLog(SessionLog log)

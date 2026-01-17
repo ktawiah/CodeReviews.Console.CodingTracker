@@ -1,69 +1,71 @@
-using Dapper;
+using KelvinTawiah.CodingTracker.Data;
 using KelvinTawiah.CodingTracker.Model;
-using Microsoft.Data.SqlClient;
 
 namespace KelvinTawiah.CodingTracker.Repository;
 
+/// <summary>
+/// EF Core repository using LINQ queries instead of raw SQL.
+/// The DbContext handles all database operations automatically.
+/// </summary>
 public class SessionRepository
 {
-  private readonly string _connectionString;
+  private readonly CodingTrackerContext _context;
 
-  public SessionRepository(string connectionString)
+  public SessionRepository(CodingTrackerContext context)
   {
-    _connectionString = connectionString;
+    _context = context;
   }
 
+  /// <summary>
+  /// Create a new session. EF Core automatically generates INSERT SQL.
+  /// SaveChanges() commits the transaction to the database.
+  /// </summary>
   public int Create(Session session)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = @"
-      INSERT INTO CodingSessions (StartTime, EndTime, DurationMinutes, Notes)
-      OUTPUT INSERTED.Id
-      VALUES (@StartTime, @EndTime, @DurationMinutes, @Notes)";
-
-    return connection.ExecuteScalar<int>(query, session);
+    _context.Sessions.Add(session);
+    _context.SaveChanges();
+    return session.Id; // EF Core automatically sets the Id after SaveChanges
   }
 
+  /// <summary>
+  /// Find by ID using LINQ instead of SQL.
+  /// FirstOrDefault returns null if not found.
+  /// </summary>
   public Session? FindById(int id)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "SELECT * FROM CodingSessions WHERE Id = @Id";
-
-    return connection.QueryFirstOrDefault<Session>(query, new { Id = id });
+    return _context.Sessions.FirstOrDefault(s => s.Id == id);
   }
 
+  /// <summary>
+  /// Update a session. EF Core tracks changes automatically.
+  /// Just modify the entity and call SaveChanges.
+  /// </summary>
   public void Update(Session session)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = @"
-      UPDATE CodingSessions 
-      SET StartTime = @StartTime, 
-          EndTime = @EndTime, 
-          DurationMinutes = @DurationMinutes,
-          Notes = @Notes
-      WHERE Id = @Id";
-
-    connection.Execute(query, session);
+    _context.Sessions.Update(session);
+    _context.SaveChanges();
   }
 
+  /// <summary>
+  /// Get all sessions using LINQ.
+  /// ToList() executes the query and returns results.
+  /// </summary>
   public List<Session> GetAll()
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "SELECT * FROM CodingSessions";
-
-    return connection.Query<Session>(query).ToList();
+    return _context.Sessions.ToList();
   }
 
+  /// <summary>
+  /// Delete a session by ID.
+  /// Find it first, then remove.
+  /// </summary>
   public void Delete(int id)
   {
-    using var connection = new SqlConnection(_connectionString);
-
-    var query = "DELETE FROM CodingSessions WHERE Id = @Id";
-
-    connection.Execute(query, new { Id = id });
+    var session = FindById(id);
+    if (session != null)
+    {
+      _context.Sessions.Remove(session);
+      _context.SaveChanges();
+    }
   }
 }

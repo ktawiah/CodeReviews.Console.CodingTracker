@@ -1,3 +1,4 @@
+using KelvinTawiah.CodingTracker.Data;
 using KelvinTawiah.CodingTracker.Model;
 using KelvinTawiah.CodingTracker.Repository;
 
@@ -7,9 +8,9 @@ public class SessionService
 {
   private readonly SessionRepository _repository;
 
-  public SessionService(string connectionString)
+  public SessionService(CodingTrackerContext context)
   {
-    _repository = new SessionRepository(connectionString);
+    _repository = new SessionRepository(context);
   }
 
   public void AddSession(Session session)
