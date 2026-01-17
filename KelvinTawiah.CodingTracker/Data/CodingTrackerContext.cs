@@ -12,10 +12,6 @@ namespace KelvinTawiah.CodingTracker.Data;
 /// </summary>
 public class CodingTrackerContext(string connectionString) : DbContext
 {
-  /// <summary>
-  /// DbSet<T> represents a collection for a specific entity type.
-  /// This maps to tables in your database.
-  /// </summary>
   public DbSet<Session> Sessions { get; set; }
   public DbSet<SessionLog> SessionLogs { get; set; }
 
